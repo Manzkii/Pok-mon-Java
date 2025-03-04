@@ -1,6 +1,6 @@
 public class Player extends Trainer{
     int pokeballs = 0;
-    private Pokemon starter;
+    boolean insideGym;
     
 
     public Player(String name, char gender, Pokemon starter){
@@ -17,5 +17,10 @@ public class Player extends Trainer{
             System.out.println(wildPokemon.getName() + " ran away!");
         }
     }
+
+    public void changeZone(int zone){
+        this.zone = zone;
+    }
+
 
 }

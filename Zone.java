@@ -1,20 +1,84 @@
 import java.util.*;
 
-public class Zone {
-    private String type;
-    private List<Pokemon> wildPokemons;
 
-    public Zone(String type, List<Pokemon> wildPokemons) {
-        this.type = type;
-        this.wildPokemons = wildPokemons;
+enum ZoneTypes{
+    Wilds, Gym
+}
+enum ZoneElements{
+    Bug, Dragon, Electric, Fighting, Fire, Poison, Rock, Flying, Ghost, Grass, Ground, Ice, Psychic, Water, Normal
+}
+
+public class Zone {
+    public List<Pokemon> wildPokemons; 
+    public List<ZoneTypes> zoneType;
+    ZoneElements zoneElement;
+    int zoneId;
+
+    public Zone(List<ZoneTypes> zoneType, int zoneId, ZoneElements zoneElement) {
+        this.zoneType = zoneType;
+        this.zoneId = zoneId;
+        this.zoneElement = zoneElement;
     }
 
-    public Pokemon encounterWildPokemon() {
-        if (wildPokemons.isEmpty()) {
-            System.out.println("No wild Pokémon available in this zone.");
+    public ZoneElements getRandomZoneElement() {
+        ZoneElements[] elements = ZoneElements.values();
+        Random rand = new Random();
+        return elements[rand.nextInt(elements.length)];
+    }
+
+    public Pokemon encounterWildPokemonByElement(ZoneElements element) {
+        List<Pokemon> filteredPokemons = new ArrayList<>();
+        switch (element) {
+            case Grass:
+                filteredPokemons.addAll(Arrays.asList(Main.grassPokemons));
+                break;
+            case Fire:
+                filteredPokemons.addAll(Arrays.asList(Main.firePokemons));
+                break;
+            case Water:
+                filteredPokemons.addAll(Arrays.asList(Main.waterPokemons));
+                break;
+            case Electric:
+                filteredPokemons.addAll(Arrays.asList(Main.electricPokemons));
+                break;
+            case Normal:
+                filteredPokemons.addAll(Arrays.asList(Main.normalPokemons));
+                break;
+            case Psychic:
+                filteredPokemons.addAll(Arrays.asList(Main.psychicPokemons));
+                break;
+            case Ghost:
+                filteredPokemons.addAll(Arrays.asList(Main.ghostPokemons));
+                break;
+            case Dragon:
+                filteredPokemons.addAll(Arrays.asList(Main.dragonPokemons));
+                break;
+            case Bug:
+                filteredPokemons.addAll(Arrays.asList(Main.bugPokemons));
+                break;
+            case Rock:
+                filteredPokemons.addAll(Arrays.asList(Main.rockPokemons));
+                break;
+            case Ground:
+                filteredPokemons.addAll(Arrays.asList(Main.groundPokemons));
+                break;
+            case Ice:
+                filteredPokemons.addAll(Arrays.asList(Main.icePokemons));
+                break;
+            case Poison:
+                filteredPokemons.addAll(Arrays.asList(Main.poisonPokemons));
+                break;
+            case Fighting:
+                filteredPokemons.addAll(Arrays.asList(Main.fightingPokemons));
+                break;
+            default:
+                break;
+        }
+        if (filteredPokemons.isEmpty()) {
+            System.out.println("No wild Pokémon available of this element in this zone.");
             return null;
         }
         Random rand = new Random();
-        return wildPokemons.get(rand.nextInt(wildPokemons.size()));
+        return filteredPokemons.get(rand.nextInt(filteredPokemons.size()));
     }
 }

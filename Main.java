@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class Main {
-    static Map<String, Zone> zones = new HashMap<>();
     
     static Pokemon[] grassPokemons = {
         new Pokemon("Venusaur",PokemonTypes.Grass, 200, 82, 100, 83),
@@ -125,56 +124,59 @@ public class Main {
         firePokemons[0],
         waterPokemons[0],
         grassPokemons[0]
-    };
-    
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter your name: ");
-        String playerName = sc.next();
-        char playerGender = ' ';
-        while(playerGender != 'm' && playerGender != 'f'){
-            System.out.println("Select your gender: [M] or [F] ");
-            playerGender = sc.next().toLowerCase().charAt(0);
+    }; 
+
+    public void main(String[] args) {
+
+        while (true) { 
+            Scanner sc = new Scanner(System.in);
+            char playerGender = ' ';
+            String playerName = " ";
+            Pokemon starterPokemon = null;
+            List<Zone> zones = new ArrayList<>();
+            TurnbasedSystem turnbasedSystem = new TurnbasedSystem();
+            
+            Player player = turnbasedSystem.intro(playerName, playerGender, starterPokemon);
+
+            zonesDecider(zones);
+            while(!player.hasLost){
+                int areachoice = turnbasedSystem.zoneSelector(player);
+                if(zones.get(areachoice).zoneType == Arrays.asList(ZoneTypes.Wilds, ZoneTypes.Gym)){
+                    turnbasedSystem.zoneTypeSelector(player);
+                }else{
+                    player.insideGym = false;
+                }
+
+                turnbasedSystem.displayZoneDetails(zones.get(areachoice));
+            }
+
+
         }
-        Pokemon starterPokemon = null;
-        int starterChoice;
+    }
 
-        while(starterPokemon == null){
-            System.out.println("Select your starter pokemon: ");
-            System.out.println("[1] Charizard");
-            System.out.println("[2] Blastoise");
-            System.out.println("[3] Venosaur");
-            starterChoice = sc.nextInt();
-            starterPokemon = starterPokemons[starterChoice];
+    public static void zonesDecider(List<Zone> zones){
+        int numOfGyms = 8;
+        List<Integer> gymIndexes = new ArrayList<>();
+        List<ZoneElements> availableZoneElements = new ArrayList<>(Arrays.asList(ZoneElements.values()));
+        Collections.shuffle(availableZoneElements);
+        Random random = new Random();
+
+        while (gymIndexes.size() < numOfGyms) {
+            int gymIndex = random.nextInt(15);
+            if (!gymIndexes.contains(gymIndex)) {
+                gymIndexes.add(gymIndex);
+            }
         }
+        
 
+        for (int i = 0; i < 15; i++) {
+            ZoneElements zoneElement = availableZoneElements.get(i);
 
-        Player player = new Player(playerName, playerGender, starterPokemon);
-
-        System.out.println("Great job, You are successful in creating your player!");
-        System.out.println("Now, let's head into battle.");
-
-        System.out.println("First, pick an area you want to go.");
-        System.out.println("[1] Area 1");
-        System.out.println("[2] Area 2");
-        System.out.println("[3] Area 3");
-        System.out.println("[4] Area 4");
-        System.out.println("[5] Area 5");
-        System.out.println("[6] Area 6");
-        System.out.println("[7] Area 7");
-        System.out.println("[8] Area 8");
-        System.out.println("[9] Area 9");
-        System.out.println("[10] Area 10");
-        System.out.println("[11] Area 11");
-        System.out.println("[12] Area 12");
-        System.out.println("[13] Area 13");
-        System.out.println("[14] Area 14");
-
-        int areaChoice = sc.nextInt();
-
-
-        while(true){
-
+            if(gymIndexes.contains(i)){
+                zones.add(new Zone(Arrays.asList(ZoneTypes.Wilds, ZoneTypes.Gym), i + 1, zoneElement));
+            }else{
+                zones.add(new Zone(Arrays.asList(ZoneTypes.Wilds), i + 1, zoneElement));
+            }
         }
     }
 }
